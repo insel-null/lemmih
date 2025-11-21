@@ -2,6 +2,16 @@
   "name": "lemmih",
   "type": "module",
   "version": "0.0.1",
+  "repository": "github:insel-null/lemmih",
+  "bugs": "https://github.com/insel-null/lemmih/issues",
+  "keywords": [
+    "bun",
+    "http",
+    "web",
+    "server",
+    "router"
+  ],
+  "sideEffects": false,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -25,9 +35,6 @@
     "dev": "bun run ./test/fixtures/example.ts",
     "lint": "eslint ."
   },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
     "@moeru/eslint-config": "^0.1.0-beta.13",
@@ -40,6 +47,7 @@
     "kill-port": "^2.0.1",
     "memoirist": "^0.4.0",
     "mitata": "^1.0.34",
-    "pkgroll": "^2.21.1"
+    "pkgroll": "^2.21.1",
+    "typescript": "^5"
   }
 }

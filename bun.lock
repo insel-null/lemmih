@@ -17,8 +17,6 @@
         "memoirist": "^0.4.0",
         "mitata": "^1.0.34",
         "pkgroll": "^2.21.1",
-      },
-      "peerDependencies": {
         "typescript": "^5",
       },
     },
