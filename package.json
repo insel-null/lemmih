@@ -3,6 +3,8 @@
   "type": "module",
   "module": "index.ts",
   "scripts": {
+    "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
+    "bench:kill-port": "bunx kill-port 3000",
     "bench:routers": "bun run ./bench/routers/bench.ts",
     "dev": "bun run ./test/fixtures/example.ts",
     "lint": "eslint ."
@@ -14,8 +16,11 @@
     "@antfu/eslint-config": "^6.2.0",
     "@moeru/eslint-config": "^0.1.0-beta.13",
     "@types/bun": "latest",
+    "@types/kill-port": "^2.0.3",
+    "elysia": "^1.4.16",
     "eslint": "^9.38.0",
     "hono": "^4.10.6",
+    "kill-port": "^2.0.1",
     "memoirist": "^0.4.0",
     "mitata": "^1.0.34"
   }

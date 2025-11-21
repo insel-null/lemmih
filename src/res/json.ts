@@ -1,1 +1,1 @@
-export const json = <T extends Record<string, unknown>>(body: T) => Response.json(body)
+export const json = (body: unknown) => Response.json(body)

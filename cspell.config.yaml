@@ -1,11 +1,17 @@
-version: '0.2'
+version: "0.2"
 ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - bunx
+  - direnv
+  - elysia
   - insel
   - lemmih
   - mitata
   - moeru
+  - nixpkgs
+  - pkgs
+  - sonarjs
 ignoreWords: []
 import: []
