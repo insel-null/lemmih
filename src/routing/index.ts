@@ -3,10 +3,10 @@ import type { Handler } from "../types";
 
 const routing = (method: string) =>
   (handler: Handler): Handler =>
-  (req) =>
+  (req, params) =>
     req.method.toUpperCase() === method
       ? handler instanceof Function
-        ? handler(req)
+        ? handler(req, params)
         : handler
       : status(405)
 
