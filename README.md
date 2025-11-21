@@ -16,6 +16,12 @@ Bun.serve({
 })
 ```
 
+## Design
+
+### Minimum Context
+
+Use `import foo from 'lemmih'` instead of `ctx.foo`, which helps with tree shaking.
+
 ## Performance
 
 ### Router
