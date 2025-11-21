@@ -1,11 +1,24 @@
 {
   "name": "lemmih",
   "type": "module",
-  "module": "index.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./bun": {
+      "types": "./dist/bun.d.ts",
+      "default": "./dist/bun.js"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
     "bench:kill-port": "nix run nixpkgs#killport -- 3000",
     "bench:routers": "bun run ./bench/routers/bench.ts",
+    "build": "pkgroll",
     "dev": "bun run ./test/fixtures/example.ts",
     "lint": "eslint ."
   },
@@ -22,6 +35,7 @@
     "hono": "^4.10.6",
     "kill-port": "^2.0.1",
     "memoirist": "^0.4.0",
-    "mitata": "^1.0.34"
+    "mitata": "^1.0.34",
+    "pkgroll": "^2.21.1"
   }
 }
