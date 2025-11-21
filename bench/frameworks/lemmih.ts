@@ -15,6 +15,6 @@ app
 
 // eslint-disable-next-line @masknet/no-top-level
 Bun.serve({
-  fetch: app.build(),
+  ...app.build(),
   port: 3000,
 })
