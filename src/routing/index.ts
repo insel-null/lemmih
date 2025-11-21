@@ -1,9 +1,9 @@
-import type { Handler } from '../types'
+import type { Handler } from '../core/types'
 
 import { status } from '../res/status'
 
-const routing = (method: string) =>
-  (handler: Handler): Handler =>
+const routing = <T = undefined>(method: string) =>
+  (handler: Handler<T>): Handler<T> =>
     async (req, params) =>
       req.method.toUpperCase() === method
         ? handler(req, params)
@@ -13,7 +13,7 @@ export const connect = routing('CONNECT')
 
 export const del = routing('DELETE')
 
-export const get = routing('GET')
+export const get = <T = undefined>(handler: Handler<T>) => routing<T>('GET')(handler)
 
 export const head = routing('HEAD')
 
@@ -21,7 +21,7 @@ export const options = routing('OPTIONS')
 
 export const patch = routing('PATCH')
 
-export const post = routing('POST')
+export const post = <T = undefined>(handler: Handler<T>) => routing<T>('POST')(handler)
 
 export const put = routing('PUT')
 

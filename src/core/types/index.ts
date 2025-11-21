@@ -1,4 +1,6 @@
-export type Handler = (req: Request, params?: Record<string, string>) => MaybePromise<Response>
+export type Handler<T = undefined> = (req: Request, params: T extends undefined
+  ? Record<string, string> | undefined
+  : T) => MaybePromise<Response>
 
 export type Layer = (req: Request, next: Next) => MaybePromise<Response>
 

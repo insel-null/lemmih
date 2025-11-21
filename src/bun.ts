@@ -1,4 +1,4 @@
-import type { Handler, MaybePromise, Next, StrictHandler } from './types'
+import type { Handler, MaybePromise, Next, StrictHandler } from './core/types'
 
 import { App } from './core/app'
 import { Router } from './core/router'

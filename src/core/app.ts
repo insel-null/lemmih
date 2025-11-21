@@ -1,4 +1,5 @@
-import type { Handler, Layer, Next } from '../types'
+import type { Handler, Layer, Next } from './types'
+import type { TypedParams } from './types/typed-params'
 
 import { status } from '../res'
 import { handle } from './handle'
@@ -61,8 +62,9 @@ export class App {
     return this
   }
 
-  public route(path: string, handler: Handler): this {
-    this.routes.set(path, handler)
+  public route<T extends string>(path: T, handler: Handler<TypedParams<T>>): this {
+    // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
+    this.routes.set(path, handler as unknown as Handler)
 
     return this
   }

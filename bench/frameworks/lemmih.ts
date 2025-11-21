@@ -7,7 +7,7 @@ const app = new App()
 app
   .route('/', routing.get(() => res.text('Hi')))
   .route('/json', routing.post(async req => req.json().then(res.json)))
-  .route('/id/:id', routing.get((req, param) => new Response(`${param!.id!} ${new URL(req.url).searchParams.get('name')}`, {
+  .route('/id/:id', routing.get((req, { id }) => new Response(`${id} ${new URL(req.url).searchParams.get('name')}`, {
     headers: {
       'x-powered-by': 'benchmark',
     },

@@ -3,8 +3,8 @@ import { App } from '../../src/bun'
 
 const app = new App()
   .route('/', routing.get(() => res.text('Hello LeMMIH')))
-  .route('/user/:id', routing.get((_, params) => res.text(params!.id!)))
-  .route('/form', routing.post(async req => res.json(await req.json() as Record<string, unknown>)))
+  .route('/user/:id', routing.get((_, { id }) => res.text(id)))
+  .route('/form', routing.post(async req => res.json(await req.json())))
 
 // eslint-disable-next-line @masknet/no-top-level
 Bun.serve({
