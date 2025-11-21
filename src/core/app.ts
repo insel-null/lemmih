@@ -5,7 +5,7 @@ import { handle } from './handle'
 import { Router } from './router'
 
 export class App {
-  fallback: Handler = status(404)
+  fallback?: Handler
   layers: Layer[] = []
   routes: Map<string, Handler> = new Map()
 
@@ -26,7 +26,7 @@ export class App {
     const result = router.find(new URL(req.url).pathname)
 
     const next = async () => handle(
-      result?.value ?? this.fallback,
+      result?.value ?? this.fallback ?? (() => status(404)),
       req,
       result?.params,
     )
@@ -51,7 +51,12 @@ export class App {
     app.routes.forEach((handler, path) => this.routes.set(path, handler))
     app.layers.forEach(layer => this.layers.push(layer))
 
-    // TODO: merge fallback
+    if (app.fallback) {
+      if (!this.fallback)
+        this.fallback = app.fallback
+      else
+        throw new Error('lemmih: Cannot merge two `App`s that both have a fallback')
+    }
 
     return this
   }

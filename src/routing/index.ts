@@ -6,9 +6,7 @@ const routing = (method: string) =>
   (handler: Handler): Handler =>
     async (req, params) =>
       req.method.toUpperCase() === method
-        ? typeof handler === 'function'
-          ? handler(req, params)
-          : handler
+        ? handler(req, params)
         : status(405)
 
 export const connect = routing('CONNECT')
