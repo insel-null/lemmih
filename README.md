@@ -10,20 +10,20 @@ import { App, res, routing } from 'lemmih'
 const app = new App()
   .route('/', routing.get(() => res.text('Hello from LeMMIH')))
 
-// Web Standards
+// Web Standards (Deno, Bun, Vercel, Cloudflare, etc...)
+// For Node.js, you can use https://srvx.h3.dev
 export default app.fetch // (req: Request) => Promise<Response>
 ```
 
 ```ts
 import { res, routing } from 'lemmih'
-import { App } from 'lemmih/bun'
+import { App } from 'lemmih/bun' // Bun-specific app
 
 const app = new App()
   .route('/', routing.get(() => res.text('Hello from LeMMIH')))
 
-// Bun.serve optimized
 Bun.serve({
-  ...app.build(),
+  ...app.build(), // Bun.serve optimized
   port: 3000
 })
 ```
@@ -33,6 +33,10 @@ Bun.serve({
 ### Minimum Context
 
 Use `import foo from 'lemmih'` instead of `ctx.foo`, which helps with tree shaking.
+
+### Runtime-agnostic
+
+LeMMIH can run on many runtimes, and when you run it on Bun, you can take advantage of related optimizations.
 
 ## Performance
 
