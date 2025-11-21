@@ -1,4 +1,4 @@
-version: "0.2"
+version: '0.2'
 ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
@@ -6,5 +6,6 @@ words:
   - insel
   - lemmih
   - mitata
+  - moeru
 ignoreWords: []
 import: []

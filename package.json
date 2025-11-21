@@ -1,18 +1,22 @@
 {
   "name": "lemmih",
-  "module": "index.ts",
   "type": "module",
+  "module": "index.ts",
   "scripts": {
+    "bench:routers": "bun run ./bench/routers/bench.ts",
     "dev": "bun run ./test/fixtures/example.ts",
-    "bench:routers": "bun run ./bench/routers/bench.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "hono": "^4.10.6",
-    "memoirist": "^0.4.0",
-    "mitata": "^1.0.34"
+    "lint": "eslint ."
   },
   "peerDependencies": {
     "typescript": "^5"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^6.2.0",
+    "@moeru/eslint-config": "^0.1.0-beta.13",
+    "@types/bun": "latest",
+    "eslint": "^9.38.0",
+    "hono": "^4.10.6",
+    "memoirist": "^0.4.0",
+    "mitata": "^1.0.34"
   }
 }

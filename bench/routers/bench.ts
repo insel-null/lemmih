@@ -1,6 +1,8 @@
-import { run, bench, group, summary } from 'mitata'
-import { regExpRouter, trieRouter, patternRouter } from './hono.ts'
 import type { Route, RouterInterface } from './tool.ts'
+
+import { bench, group, run, summary } from 'mitata'
+
+import { patternRouter, regExpRouter, trieRouter } from './hono.ts'
 import { lemmihRouter } from './lemmih.ts'
 import { memoiristRouter } from './memoirist.ts'
 
@@ -14,42 +16,43 @@ const routers: RouterInterface[] = [
 
 const routes: (Route & { name: string })[] = [
   {
-    name: 'short static',
     method: 'GET',
+    name: 'short static',
     path: '/user',
   },
   {
-    name: 'static with same radix',
     method: 'GET',
+    name: 'static with same radix',
     path: '/user/comments',
   },
   {
-    name: 'dynamic route',
     method: 'GET',
+    name: 'dynamic route',
     path: '/user/lookup/username/hey',
   },
   {
-    name: 'mixed static dynamic',
     method: 'GET',
+    name: 'mixed static dynamic',
     path: '/event/abcd1234/comments',
   },
   {
-    name: 'post',
     method: 'POST',
+    name: 'post',
     path: '/event/abcd1234/comment',
   },
   {
-    name: 'long static',
     method: 'GET',
+    name: 'long static',
     path: '/very/deeply/nested/route/hello/there',
   },
   {
-    name: 'wildcard',
     method: 'GET',
+    name: 'wildcard',
     path: '/static/index.html',
   },
 ]
 
+// eslint-disable-next-line @masknet/no-top-level
 for (const route of routes) {
   summary(() => {
     group(`${route.name} - ${route.method} ${route.path}`, () => {
@@ -62,6 +65,7 @@ for (const route of routes) {
   })
 }
 
+// eslint-disable-next-line @masknet/no-top-level
 group('all together', () => {
   summary(() => {
     for (const router of routers) {
@@ -74,4 +78,5 @@ group('all together', () => {
   })
 })
 
+// eslint-disable-next-line @masknet/no-top-level, antfu/no-top-level-await
 await run()

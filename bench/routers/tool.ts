@@ -1,13 +1,13 @@
 export const handler = () => {}
 
-export type Route = {
+export interface Route {
   method: 'GET' | 'POST'
   path: string
 }
 
 export interface RouterInterface {
-  name: string
   match: (route: Route) => unknown
+  name: string
 }
 
 export const routes: Route[] = [

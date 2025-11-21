@@ -1,14 +1,15 @@
-import { status } from "../res/status";
-import type { Handler } from "../types";
+import type { Handler } from '../types'
+
+import { status } from '../res/status'
 
 const routing = (method: string) =>
   (handler: Handler): Handler =>
-  (req, params) =>
-    req.method.toUpperCase() === method
-      ? handler instanceof Function
-        ? handler(req, params)
-        : handler
-      : status(405)
+    async (req, params) =>
+      req.method.toUpperCase() === method
+        ? typeof handler === 'function'
+          ? handler(req, params)
+          : handler
+        : status(405)
 
 export const connect = routing('CONNECT')
 

@@ -1,19 +1,22 @@
+import type { Router } from 'hono/router'
+
+import type { RouterInterface } from './tool.ts'
+
 import { PatternRouter } from 'hono/router/pattern-router'
 import { RegExpRouter } from 'hono/router/reg-exp-router'
 import { TrieRouter } from 'hono/router/trie-router'
-import type { Router } from 'hono/router'
-import type { RouterInterface } from './tool.ts'
-import { routes, handler } from './tool.ts'
+
+import { handler, routes } from './tool.ts'
 
 const createHonoRouter = (name: string, router: Router<unknown>): RouterInterface => {
   for (const route of routes) {
     router.add(route.method, route.path, handler)
   }
   return {
-    name: `Hono ${name}`,
     match: (route) => {
       router.match(route.method, route.path)
     },
+    name: `Hono ${name}`,
   }
 }
 

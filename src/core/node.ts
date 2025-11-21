@@ -1,13 +1,13 @@
-import type { Handler } from "../types";
+import type { Handler } from '../types'
 
 export class Node {
-  value?: Handler
   children: Map<string, Node> = new Map()
   param?: Node
-  wildcard?: Node
   paramName?: string
+  value?: Handler
+  wildcard?: Node
 
   constructor(value?: Handler) {
-    this.value = value;
+    this.value = value
   }
 }
