@@ -1,1 +1,5 @@
-# lemmih
+# LeMMIH
+
+## License
+
+[MIT](LICENSE.md)
