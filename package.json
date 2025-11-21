@@ -14,6 +14,7 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "files": ["dist"],
   "scripts": {
     "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
     "bench:kill-port": "nix run nixpkgs#killport -- 3000",
