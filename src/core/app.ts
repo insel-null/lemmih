@@ -17,6 +17,8 @@ export class App {
   }
 
   public build(): (req: Request) => MaybePromise<Response> {
+    // TODO: static, routes
+
     const router = new Router()
     this.routes.forEach((handler, path) => router.insert(path, handler))
 
