@@ -4,7 +4,7 @@
   "module": "index.ts",
   "scripts": {
     "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
-    "bench:kill-port": "bunx kill-port 3000",
+    "bench:kill-port": "nix run nixpkgs#killport -- 3000",
     "bench:routers": "bun run ./bench/routers/bench.ts",
     "dev": "bun run ./test/fixtures/example.ts",
     "lint": "eslint ."
