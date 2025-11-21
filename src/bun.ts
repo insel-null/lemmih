@@ -1,7 +1,6 @@
-import type { Handler, MaybePromise } from './types'
+import type { Handler, MaybePromise, Next, StrictHandler } from './types'
 
 import { App } from './core/app'
-import { handle } from './core/handle'
 import { Router } from './core/router'
 
 export interface LeMMIHBuildResult {
@@ -23,28 +22,35 @@ class BunApp extends App {
           acc.dynamicRoutes.set(path, handler)
         }
         else {
-          acc.staticRoutes[path] = handler as (req: Request) => MaybePromise<Response>
+          acc.staticRoutes[path] = this.withLayers(handler)
         }
         return acc
       }, {
         dynamicRoutes: new Map<string, Handler>(),
-        staticRoutes: {} as Record<string, (req: Request) => MaybePromise<Response>>,
+        staticRoutes: {} as Record<string, StrictHandler>,
       })
 
     const router = new Router<Handler>()
     dynamicRoutes.forEach((handler, path) => router.insert(path, handler))
 
     return {
-      fetch: async (req) => {
-        const result = router.find(new URL(req.url).pathname)
-
-        return handle(
-          result?.value ?? this.fallback,
-          req,
-          result?.params,
-        )
-      },
+      fetch: async req => this.handle(req, router),
       routes: staticRoutes,
+    }
+  }
+
+  private withLayers(handler: Handler): StrictHandler {
+    return async (req: Request) => {
+      const next: Next = async () => (handler as StrictHandler)(req)
+
+      return (
+        this.layers.length > 0
+          ? this.layers.reduceRight<Next>(
+              (currentNext, layer) => async () => layer(req, currentNext),
+              next,
+            )
+          : next
+      )()
     }
   }
 }
