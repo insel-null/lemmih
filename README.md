@@ -10,6 +10,18 @@ import { App, res, routing } from 'lemmih'
 const app = new App()
   .route('/', routing.get(() => res.text('Hello from LeMMIH')))
 
+// Web Standards
+export default app.fetch // (req: Request) => Promise<Response>
+```
+
+```ts
+import { res, routing } from 'lemmih'
+import { App } from 'lemmih/bun'
+
+const app = new App()
+  .route('/', routing.get(() => res.text('Hello from LeMMIH')))
+
+// Bun.serve optimized
 Bun.serve({
   ...app.build(),
   port: 3000
