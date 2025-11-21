@@ -38,6 +38,12 @@ Use `import foo from 'lemmih'` instead of `ctx.foo`, which helps with tree shaki
 
 LeMMIH can run on many runtimes, and when you run it on Bun, you can take advantage of related optimizations.
 
+### Look familiar?
+
+~~Scenes like these are happening all over the galaxy right now. You could be next.~~
+
+LeMMIH's architecture draws inspiration from Axum. In fact, you can even pair it with the [Result/Option library](https://std.moeru.ai/docs/packages/results)!
+
 ## Performance
 
 ### Router
