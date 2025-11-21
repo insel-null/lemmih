@@ -1,15 +1,13 @@
-import type { Handler } from '../types'
-
 import { Node } from './node'
 
-export class Router {
-  root: Node
+export class Router<T> {
+  root: Node<T>
 
   constructor() {
     this.root = new Node()
   }
 
-  find(path: string): undefined | { params: Record<string, string>, value?: Handler } {
+  find(path: string): undefined | { params: Record<string, string>, value?: T } {
     let currentNode = this.root
     const params: Record<string, string> = {}
 
@@ -43,7 +41,7 @@ export class Router {
     }
   }
 
-  insert(path: string, handler: Handler): void {
+  insert(path: string, value: T): void {
     let currentNode = this.root
     const segments = path.split('/').filter(Boolean)
     for (const segment of segments) {
@@ -68,6 +66,6 @@ export class Router {
         currentNode = currentNode.children.get(segment)!
       }
     }
-    currentNode.value = handler
+    currentNode.value = value
   }
 }

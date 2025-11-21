@@ -6,10 +6,10 @@ import { Router } from './router'
 
 export class App {
   fallback: Handler = status(404)
-
   routes: Map<string, Handler> = new Map()
+
   get fetch(): (req: Request) => Promise<Response> {
-    const router = new Router()
+    const router = new Router<Handler>()
     this.routes.forEach((handler, path) => router.insert(path, handler))
 
     return async (req) => {

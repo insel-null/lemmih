@@ -31,7 +31,7 @@ class BunApp extends App {
         staticRoutes: {} as Record<string, (req: Request) => MaybePromise<Response>>,
       })
 
-    const router = new Router()
+    const router = new Router<Handler>()
     dynamicRoutes.forEach((handler, path) => router.insert(path, handler))
 
     return {
