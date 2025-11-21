@@ -1,4 +1,6 @@
 export { App } from './core/app'
+export { Node } from './core/node'
+export { Router } from './core/router'
 export * as res from './res'
 export * as routing from './routing'
 export type * from './types'
