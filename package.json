@@ -28,6 +28,7 @@
   "files": ["dist"],
   "scripts": {
     "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
+    "bench:frameworks-init": "bun run ./bench/frameworks-init/bench.ts",
     "bench:kill-port": "nix run nixpkgs#killport -- 3000",
     "bench:routers": "bun run ./bench/routers/bench.ts",
     "build": "pkgroll --clean-dist",
