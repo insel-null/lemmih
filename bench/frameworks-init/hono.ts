@@ -12,3 +12,4 @@ export const hono = () => new Hono()
 
     return c.text(`${id} ${name}`)
   })
+  .fetch
