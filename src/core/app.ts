@@ -1,4 +1,4 @@
-import type { Handler, Layer, Next } from './types'
+import type { Handler, Layer, StrictHandler } from './types'
 import type { TypedParams } from './types/typed-params'
 
 import { status } from '../res'
@@ -10,7 +10,7 @@ export class App {
   layers: Layer[] = []
   routes: Map<string, Handler> = new Map()
 
-  get fetch(): (req: Request) => Promise<Response> {
+  get fetch(): StrictHandler {
     const router = new Router<Handler>()
     this.routes.forEach((handler, path) => router.insert(path, handler))
 
@@ -26,7 +26,7 @@ export class App {
   public async handle(req: Request, router: Router<Handler>) {
     const result = router.find(new URL(req.url).pathname)
 
-    const next = async () => handle(
+    const next = async (req: Request) => handle(
       result?.value ?? this.fallback ?? (() => status(404)),
       req,
       result?.params,
@@ -34,12 +34,12 @@ export class App {
 
     return (
       this.layers.length > 0
-        ? this.layers.reduceRight<Next>(
-            (next, layer) => async () => layer(req, next),
+        ? this.layers.reduceRight<StrictHandler>(
+            (next, layer) => async req => layer(req, next),
             next,
           )
         : next
-    )()
+    )(req)
   }
 
   public layer(...layers: Layer[]): this {
