@@ -1,11 +1,7 @@
-import { Node } from './node'
+import { newNode } from './node'
 
 export class Router<T> {
-  root: Node<T>
-
-  constructor() {
-    this.root = new Node()
-  }
+  root = newNode<T>()
 
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
     let currentNode = this.root
@@ -43,27 +39,35 @@ export class Router<T> {
 
   insert(path: string, value: T): void {
     let currentNode = this.root
-    const segments = path.split('/').filter(Boolean)
-    for (const segment of segments) {
-      if (segment.startsWith(':')) {
-        if (!currentNode.param) {
-          currentNode.param = new Node()
-          currentNode.param.paramName = segment.substring(1)
+    const segments = path.split('/')
+
+    for (let i = 0, len = segments.length; i < len; i++) {
+      const segment = segments[i]
+      // eslint-disable-next-line ts/strict-boolean-expressions -- performance
+      if (!segment) {
+        continue
+      }
+      if (segment[0] === ':') {
+        if (currentNode.param === undefined) {
+          currentNode.param = newNode()
+          currentNode.param.paramName = segment.slice(1)
         }
         currentNode = currentNode.param
       }
       else if (segment === '*') {
-        if (!currentNode.wildcard) {
-          currentNode.wildcard = new Node()
-        }
+        currentNode.wildcard ||= newNode()
         currentNode = currentNode.wildcard
         break
       }
       else {
-        if (!currentNode.children.has(segment)) {
-          currentNode.children.set(segment, new Node())
+        if (currentNode.children.has(segment)) {
+          currentNode = currentNode.children.get(segment)!
         }
-        currentNode = currentNode.children.get(segment)!
+        else {
+          const node = newNode<T>()
+          currentNode.children.set(segment, node)
+          currentNode = node
+        }
       }
     }
     currentNode.value = value

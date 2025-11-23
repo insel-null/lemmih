@@ -1,11 +1,15 @@
-export class Node<T> {
-  children: Map<string, Node<T>> = new Map()
+export interface Node<T> {
+  children: Map<string, Node<T>>
   param?: Node<T>
   paramName?: string
   value?: T
   wildcard?: Node<T>
-
-  constructor(value?: T) {
-    this.value = value
-  }
 }
+
+export const newNode = <T>(value?: T): Node<T> => ({
+  children: new Map(),
+  param: undefined,
+  paramName: undefined,
+  value,
+  wildcard: undefined,
+})
