@@ -99,6 +99,40 @@ bun bench:frameworks
 
 We still have some distance to go before reaching Elysia, but we're already faster than Hono.
 
+### Framework cold start
+
+```bash
+bun bench:frameworks-init
+```
+
+```
+benchmark                   avg (min … max) p75 / p99    (min … top 1%)
+------------------------------------------- -------------------------------
+elysia                         6.05 µs/iter   5.49 µs ▂█
+                      (3.82 µs … 721.88 µs)  29.58 µs ██
+                    (  0.00  b …   1.00 mb) 520.89  b ██▅▃▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+hono                           1.54 µs/iter   1.64 µs █▅
+                    (585.00 ns … 919.75 µs)   8.58 µs ██▆
+                    (  0.00  b … 256.00 kb)  54.36  b ████▆▄▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁
+
+hono/quick                     1.31 µs/iter   1.28 µs █▃
+                    (564.00 ns … 976.53 µs)   7.88 µs ██
+                    (  0.00  b … 512.00 kb)  36.25  b ███▅▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+hono/tiny                      2.80 µs/iter   2.64 µs █▇
+                      (1.47 µs … 838.74 µs)  12.58 µs ██
+                    (  0.00  b … 256.00 kb) 133.15  b ██▆▄▃▃▃▂▂▂▂▁▁▁▁▁▁▁▁▁▁
+
+lemmih                       467.87 ns/iter 445.00 ns  █
+                    (296.00 ns … 589.00 µs)   1.64 µs  █
+                    (  0.00  b … 256.00 kb)  12.98  b ▄█▅▃▃▃▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
+
+lemmih/bun                     1.04 µs/iter   1.45 µs ▃█
+                      (451.06 ns … 2.25 µs)   2.13 µs ██▃
+                    (  0.00  b … 512.00  b)   9.88  b ███▂█▅▅▅▄▄▆▄▄▃▄▂▅▃█▆▄
+```
+
 ## License
 
 [MIT](LICENSE.md)
