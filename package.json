@@ -20,6 +20,10 @@
     "./bun": {
       "types": "./dist/bun.d.ts",
       "default": "./dist/bun.js"
+    },
+    "./cors": {
+      "types": "./dist/layers/cors.d.ts",
+      "default": "./dist/layers/cors.js"
     }
   },
   "main": "./dist/index.js",
@@ -37,6 +41,9 @@
     "bump": "bumpp --no-push",
     "dev": "bun run ./test/fixtures/example.ts",
     "lint": "eslint ."
+  },
+  "dependencies": {
+    "cors-edge": "^1.0.1"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^6.2.0",
