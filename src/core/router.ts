@@ -10,7 +10,7 @@ export class Router<T> {
     const segments = path.split('/')
     for (let i = 0, len = segments.length; i < len; i++) {
       const segment = segments[i]
-      if (segment == null)
+      if (!segment)
         continue
 
       const child = currentNode.children.get(segment)
