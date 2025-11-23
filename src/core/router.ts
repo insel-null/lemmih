@@ -3,7 +3,6 @@ import { newNode } from './node'
 export class Router<T> {
   root = newNode<T>()
 
-  // eslint-disable-next-line sonarjs/cognitive-complexity
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
     let currentNode = this.root
     let params: Record<string, string> | undefined
@@ -28,7 +27,7 @@ export class Router<T> {
       }
       else if (currentNode.wildcard) {
         currentNode = currentNode.wildcard
-        // if (!params) params = {}
+        // params ||= {}
         // params['*'] = segments.slice(i).filter(Boolean).join('/')
         break
       }
