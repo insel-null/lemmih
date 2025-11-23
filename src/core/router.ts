@@ -22,8 +22,7 @@ export class Router<T> {
       else if (currentNode.param) {
         currentNode = currentNode.param
         if (currentNode.param?.paramName != null) {
-          if (!params)
-            params = {}
+          params ||= {}
           params[currentNode.param.paramName] = segment
         }
       }
