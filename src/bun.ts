@@ -11,13 +11,13 @@ class BunApp extends App {
   }
 
   get routes(): Bun.Serve.Routes<undefined, string> {
-    const rs: Bun.Serve.Routes<undefined, string> = {}
+    const routes: Bun.Serve.Routes<undefined, string> = {}
 
     this.routesMap.forEach((handler, path) => {
-      rs[path] = async (req: BunRequest) => this.handle(req, handler, req.params)
+      routes[path] = async (req: BunRequest) => this.handle(req, handler, req.params)
     })
 
-    return rs
+    return routes
   }
 
   constructor(fallback?: StrictHandler) {
