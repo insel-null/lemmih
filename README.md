@@ -56,35 +56,35 @@ bun bench:routers
 ```
 • all together
 ------------------------------------------- -------------------------------
-Hono RegExpRouter            403.35 ns/iter 401.53 ns  █▄
-                    (370.76 ns … 670.03 ns) 618.39 ns  ██
-                    (  0.00  b … 448.00  b)   2.27  b ▇███▂▂▁▃▂▁▂▁▁▁▁▁▁▁▁▁▁
+Hono RegExpRouter            471.77 ns/iter 450.52 ns █▇
+                      (399.93 ns … 1.79 µs)   1.37 µs ██
+                    (  0.00  b … 896.00  b)  23.14  b ██▃▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁
 
-Hono TrieRouter                4.03 µs/iter   4.56 µs  █            ▃
-                        (3.10 µs … 5.36 µs)   5.14 µs  █      ▃     █▆
-                    (  0.00  b … 448.00  b)  25.30  b ▆█▄▄▁▄▁▁█▄▄▁▁███▄▄▁▁▄
+Hono TrieRouter                3.08 µs/iter   3.15 µs   █  ▃
+                        (2.69 µs … 4.16 µs)   3.94 µs   █▆▆█▆▃
+                    (  0.00  b … 256.00  b)  10.64  b █▄██████▁▄▆▆▆▄▆▁▄▁▁▁▄
 
-Hono PatternRouter             1.53 µs/iter   1.54 µs    ▆█  ▅
-                        (1.46 µs … 1.78 µs)   1.64 µs   ██████▃      ▃
-                    (  0.00  b … 128.00  b)   2.91  b ▆████████▆▃▃▆▄▃█▃▄▁▆▄
+Hono PatternRouter             2.15 µs/iter   2.30 µs  ▅▂ ▅    ▂  █
+                        (1.86 µs … 2.67 µs)   2.62 µs ▇██▇█ ▂ ▇█▇▅█▅    ▂
+                    (  0.00  b … 928.00  b)  14.96  b █████▇█▁██████▄▄▄▁█▄▄
 
-LeMMIH                       559.11 ns/iter 569.00 ns ▇█
-                      (478.69 ns … 1.55 µs)   1.25 µs ██
-                    (  0.00  b …   1.63 kb)  11.83  b ██▄▆▄▂▂▂▁▂▁▁▁▁▁▁▁▁▁▁▁
+LeMMIH                       195.85 ns/iter 196.16 ns  █
+                    (168.76 ns … 589.25 ns) 440.65 ns  █▇
+                    (  0.00  b … 288.00  b)   3.74  b ▆██▆▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
 
-Memoirist                    548.81 ns/iter 436.64 ns █
-                      (390.68 ns … 2.01 µs)   1.96 µs █
-                    (  0.00  b …   0.00  b)   0.00  b █▄▂▁▂▁▁▁▁▁▁▁▁▁▁▁▂▁▁▁▁
+Memoirist                    546.81 ns/iter 560.28 ns   █▅▂
+                    (472.48 ns … 869.89 ns) 844.06 ns  ████▃
+                    (  0.00  b … 256.00  b)   2.95  b ▄█████▆▃▅▂▂▂▂▂▁▁▁▁▁▁▁
 
 summary
-  Hono RegExpRouter
-   1.36x faster than Memoirist
-   1.39x faster than LeMMIH
-   3.79x faster than Hono PatternRouter
-   9.98x faster than Hono TrieRouter
+  LeMMIH
+   2.41x faster than Hono RegExpRouter
+   2.79x faster than Memoirist
+   10.99x faster than Hono PatternRouter
+   15.71x faster than Hono TrieRouter
 ```
 
-Our LeMMIH router is smaller than the Elysia (Memoirist) router but slightly less powerful.
+We're now the fastest router!
 
 ### [Framework](./results/result.md)
 
