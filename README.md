@@ -94,11 +94,11 @@ bun bench:frameworks
 
 |  Framework       | Runtime | Average | Ping       | Query      | Body       |
 | ---------------- | ------- | ------- | ---------- | ---------- | ---------- |
-| elysia | bun | 78,939.283 | 95,063.59 | 75,846.83 | 65,907.43 |
-| lemmih | bun | 78,259.113 | 88,234.07 | 75,674.28 | 70,868.99 |
-| hono | bun | 66,688.83 | 71,057.76 | 70,602.88 | 58,405.85 |
+| elysia | bun | 81,925.21 | 98,416.89 | 75,861.53 | 71,497.21 |
+| lemmih | bun | 75,771.083 | 79,894.87 | 74,951.42 | 72,466.96 |
+| hono | bun | 63,737.29 | 66,442.04 | 67,496 | 57,273.83 |
 
-We're very close to Elysia.
+We're close to Elysia.
 
 ### Framework cold start
 
