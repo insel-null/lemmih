@@ -213,6 +213,7 @@ const main = async () => {
   const frameworks = [
     'bun/elysia',
     'bun/hono',
+    'bun/lemmih-bun',
     'bun/lemmih',
   ]
 

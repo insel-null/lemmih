@@ -1,4 +1,5 @@
-import { App, res, routing } from '../../src'
+import { res, routing } from '../../src'
+import { App } from '../../src/bun'
 
 const app = new App()
 
@@ -17,4 +18,5 @@ app
 Bun.serve({
   fetch: app.fetch,
   port: 3000,
+  routes: app.routes,
 })

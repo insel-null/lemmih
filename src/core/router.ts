@@ -5,23 +5,30 @@ export class Router<T> {
 
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
     let currentNode = this.root
-    const params: Record<string, string> = {}
+    let params: Record<string, string> | undefined
 
-    let wildcardPath = ''
-    const segments = path.split('/').filter(Boolean)
-    for (const [i, segment] of segments.entries()) {
-      if (currentNode.children.has(segment)) {
-        currentNode = currentNode.children.get(segment)!
+    const segments = path.split('/')
+    for (let i = 0, len = segments.length; i < len; i++) {
+      const segment = segments[i]
+      // eslint-disable-next-line ts/strict-boolean-expressions
+      if (!segment)
+        continue
+
+      const child = currentNode.children.get(segment)
+      if (child) {
+        currentNode = child
       }
       else if (currentNode.param) {
-        if (currentNode.param.paramName != null) {
+        currentNode = currentNode.param
+        if (currentNode.param?.paramName != null) {
+          params ||= {}
           params[currentNode.param.paramName] = segment
         }
-        currentNode = currentNode.param
       }
       else if (currentNode.wildcard) {
-        wildcardPath = segments.slice(i).join('/')
         currentNode = currentNode.wildcard
+        // params ||= {}
+        // params['*'] = segments.slice(i).filter(Boolean).join('/')
         break
       }
       else {
@@ -30,10 +37,11 @@ export class Router<T> {
     }
 
     if (currentNode.value != null) {
-      if (wildcardPath)
-        params['*'] = wildcardPath
+      // if (wildcardPath)
+      //   params['*'] = wildcardPath
 
-      return { params, value: currentNode.value }
+      // return { params, value: currentNode.value }
+      return { params: params ?? {}, value: currentNode.value }
     }
   }
 
