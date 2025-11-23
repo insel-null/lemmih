@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      cors-edge:
+        specifier: ^1.0.1
+        version: 1.0.1
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^6.2.0
@@ -955,6 +959,9 @@ packages:
 
   core-js-compat@3.47.0:
     resolution: {integrity: sha512-IGfuznZ/n7Kp9+nypamBhvwdwLsW6KC8IOaURw2doAK5e98AG3acVLdh0woOnEqCfUtS+Vu882JE4k/DAm3ItQ==}
+
+  cors-edge@1.0.1:
+    resolution: {integrity: sha512-6lPiL5GEM/k+kTX184FVOUlIMIktMT/8JftNH4ciGSgJITjfCVhZeR4DVgLHnt9jkv/iXH8LcSWBAvdOWFc1sA==}
 
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
@@ -2887,6 +2894,8 @@ snapshots:
   core-js-compat@3.47.0:
     dependencies:
       browserslist: 4.28.0
+
+  cors-edge@1.0.1: {}
 
   cross-spawn@7.0.6:
     dependencies:
