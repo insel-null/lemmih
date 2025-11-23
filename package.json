@@ -25,7 +25,9 @@
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "bench:frameworks": "bun run ./bench/frameworks/bench.ts",
     "bench:frameworks-init": "bun run ./bench/frameworks-init/bench.ts",
@@ -42,6 +44,7 @@
     "@types/bun": "latest",
     "@types/kill-port": "^2.0.3",
     "bumpp": "^10.3.1",
+    "bun": "^1.3.3",
     "elysia": "^1.4.16",
     "eslint": "^9.38.0",
     "hono": "^4.10.6",

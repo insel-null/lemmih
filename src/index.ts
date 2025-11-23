@@ -1,5 +1,5 @@
 export { App } from './core/app'
-export { Node } from './core/node'
+export type { Node } from './core/node'
 export { Router } from './core/router'
 export type * from './core/types'
 export type * from './core/types/typed-params'
