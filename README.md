@@ -23,8 +23,9 @@ const app = new App()
   .route('/', routing.get(() => res.text('Hello from LeMMIH')))
 
 Bun.serve({
-  ...app.build(), // Bun.serve optimized
-  port: 3000
+  fetch: app.fetch, // Bun.serve optimized
+  port: 3000,
+  routes: app.routes // Bun.serve optimized
 })
 ```
 
@@ -93,11 +94,11 @@ bun bench:frameworks
 
 |  Framework       | Runtime | Average | Ping       | Query      | Body       |
 | ---------------- | ------- | ------- | ---------- | ---------- | ---------- |
-| elysia | bun | 165,919.86 | 289,342.74 | 114,199.43 | 94,217.41 |
-| lemmih | bun | 83,172.147 | 105,613.91 | 64,541.17 | 79,361.36 |
-| hono | bun | 65,372.537 | 94,328.79 | 58,534.07 | 43,254.75 |
+| elysia | bun | 78,939.283 | 95,063.59 | 75,846.83 | 65,907.43 |
+| lemmih | bun | 78,259.113 | 88,234.07 | 75,674.28 | 70,868.99 |
+| hono | bun | 66,688.83 | 71,057.76 | 70,602.88 | 58,405.85 |
 
-We still have some distance to go before reaching Elysia, but we're already faster than Hono.
+We're very close to Elysia.
 
 ### Framework cold start
 

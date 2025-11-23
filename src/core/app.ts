@@ -2,34 +2,38 @@ import type { Handler, Layer, StrictHandler } from './types'
 import type { TypedParams } from './types/typed-params'
 
 import { status } from '../res'
-import { handle } from './handle'
 import { Router } from './router'
 
 export class App {
-  fallback?: Handler
+  fallback?: StrictHandler
   layers: Layer[] = []
-  routes: Map<string, Handler> = new Map()
+  routesMap: Map<string, Handler> = new Map()
 
   get fetch(): StrictHandler {
     const router = new Router<Handler>()
-    this.routes.forEach((handler, path) => router.insert(path, handler))
+    this.routesMap.forEach((handler, path) => router.insert(path, handler))
 
-    return async req => this.handle(req, router)
+    return async (req) => {
+      const result = router.find(new URL(req.url).pathname)
+
+      return this.handle(
+        req,
+        result?.value,
+        result?.params,
+      )
+    }
   }
 
-  constructor(fallback?: Handler) {
+  constructor(fallback?: StrictHandler) {
     // eslint-disable-next-line @masknet/prefer-early-return
     if (fallback != null)
       this.fallback = fallback
   }
 
-  public async handle(req: Request, router: Router<Handler>) {
-    const result = router.find(new URL(req.url).pathname)
-
-    const next = async (req: Request) => handle(
-      result?.value ?? this.fallback ?? (() => status(404)),
+  public async handle(req: Request, handler?: Handler, params?: Record<string, string>): Promise<Response> {
+    const next = async (req: Request) => (handler ?? this.fallback ?? (() => status(404)) satisfies Handler)(
       req,
-      result?.params,
+      params,
     )
 
     return (
@@ -49,7 +53,7 @@ export class App {
   }
 
   public merge(app: App): this {
-    app.routes.forEach((handler, path) => this.routes.set(path, handler))
+    app.routesMap.forEach((handler, path) => this.routesMap.set(path, handler))
     app.layers.forEach(layer => this.layers.push(layer))
 
     if (app.fallback) {
@@ -64,7 +68,7 @@ export class App {
 
   public route<T extends string>(path: T, handler: Handler<TypedParams<T>>): this {
     // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
-    this.routes.set(path, handler as unknown as Handler)
+    this.routesMap.set(path, handler as unknown as Handler)
 
     return this
   }

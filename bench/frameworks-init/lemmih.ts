@@ -21,4 +21,4 @@ export const lemmihBun = () => new BunApp()
     },
   }),
   ))
-  .build()
+  .routes

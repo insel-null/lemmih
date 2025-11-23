@@ -1,57 +1,27 @@
-import type { Handler, MaybePromise, Next, StrictHandler } from './core/types'
+import type { BunRequest } from 'bun'
+
+import type { StrictHandler } from './core/types'
 
 import { App } from './core/app'
-import { Router } from './core/router'
-
-export interface LeMMIHBuildResult {
-  fetch: (req: Request) => MaybePromise<Response>
-  routes: Record<string, (req: Request) => MaybePromise<Response>>
-}
+import { status } from './res'
 
 class BunApp extends App {
-  constructor(fallback?: Handler) {
+  override get fetch(): StrictHandler {
+    return this.fallback ?? (async () => status(404))
+  }
+
+  get routes(): Bun.Serve.Routes<undefined, string> {
+    const rs: Bun.Serve.Routes<undefined, string> = {}
+
+    this.routesMap.forEach((handler, path) => {
+      rs[path] = async (req: BunRequest) => this.handle(req, handler, req.params)
+    })
+
+    return rs
+  }
+
+  constructor(fallback?: StrictHandler) {
     super(fallback)
-  }
-
-  public build(): LeMMIHBuildResult {
-    const { dynamicRoutes, staticRoutes } = Array.from(this.routes.entries())
-      .reduce((acc, [path, handler]) => {
-        const isDynamic = path.includes(':') || path.includes('*')
-
-        if (isDynamic) {
-          acc.dynamicRoutes.set(path, handler)
-        }
-        else {
-          acc.staticRoutes[path] = this.withLayers(handler)
-        }
-        return acc
-      }, {
-        dynamicRoutes: new Map<string, Handler>(),
-        staticRoutes: {} as Record<string, StrictHandler>,
-      })
-
-    const router = new Router<Handler>()
-    dynamicRoutes.forEach((handler, path) => router.insert(path, handler))
-
-    return {
-      fetch: async req => this.handle(req, router),
-      routes: staticRoutes,
-    }
-  }
-
-  private withLayers(handler: Handler): StrictHandler {
-    return async (req: Request) => {
-      const next: Next = async () => (handler as StrictHandler)(req)
-
-      return (
-        this.layers.length > 0
-          ? this.layers.reduceRight<Next>(
-              (currentNext, layer) => async () => layer(req, currentNext),
-              next,
-            )
-          : next
-      )()
-    }
   }
 }
 
