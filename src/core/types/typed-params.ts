@@ -9,9 +9,14 @@ export type TypedParams<Path extends string>
 
 type EmptyObject = Record<never, never>
 
+// type PathSegment<S extends string>
+//   = S extends '*'
+//     ? { '*': string }
+//     : S extends `:${infer ParamName}`
+//       ? { [K in ParamName]: string }
+//       : EmptyObject
+// removed for BunRequest compatible
 type PathSegment<S extends string>
-  = S extends '*'
-    ? { '*': string }
-    : S extends `:${infer ParamName}`
-      ? { [K in ParamName]: string }
-      : EmptyObject
+  = S extends `:${infer ParamName}`
+    ? { [K in ParamName]: string }
+    : EmptyObject
