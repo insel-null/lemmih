@@ -6,10 +6,10 @@ export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH'
 
 export class MethodRouter<T> {
   private anyHandler: Handler<T>
-  private handlers: Map<string, Handler<T>>
+  private handlers: Record<string, Handler<T>>
 
   constructor() {
-    this.handlers = new Map()
+    this.handlers = Object.create(null) as Record<string, Handler<T>>
     this.anyHandler = async () => status(405)
   }
 
@@ -32,7 +32,7 @@ export class MethodRouter<T> {
   }
 
   async handle(req: Request, params: Parameters<Handler<T>>[1]): Promise<Response> {
-    return (this.handlers.get(req.method.toUpperCase()) ?? this.anyHandler)(req, params)
+    return (this.handlers[req.method] ?? this.anyHandler)(req, params)
   }
 
   head(handler: Handler<T>): MethodRouter<T> {
@@ -40,7 +40,7 @@ export class MethodRouter<T> {
   }
 
   on(method: Method, handler: Handler<T>): MethodRouter<T> {
-    this.handlers.set(method, handler)
+    this.handlers[method] = handler
 
     return this
   }
