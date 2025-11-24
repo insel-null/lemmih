@@ -32,12 +32,7 @@ export class MethodRouter<T> {
   }
 
   async handle(req: Request, params: Parameters<Handler<T>>[1]): Promise<Response> {
-    const handler = this.handlers.get(req.method.toUpperCase())
-
-    if (handler)
-      return handler(req, params)
-    else
-      return this.anyHandler(req, params)
+    return (this.handlers.get(req.method.toUpperCase()) ?? this.anyHandler)(req, params)
   }
 
   head(handler: Handler<T>): MethodRouter<T> {
