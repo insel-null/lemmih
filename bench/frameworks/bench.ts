@@ -149,11 +149,12 @@ const spawn = (target: string, title = true) => {
     await sleep(0.3)
 
     try {
-      await fetch('http://127.0.0.1:3000')
-      await sleep(0.6)
-      await fetch('http://127.0.0.1:3000')
+      // await fetch('http://127.0.0.1:3000')
+      // await sleep(0.6)
+      // await fetch('http://127.0.0.1:3000')
 
-      await killPort(3000)
+      // await killPort(3000)
+      await Bun.$`nix run nixpkgs#killport -- 3000`
     }
     catch {
       // Empty

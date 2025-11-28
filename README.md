@@ -56,10 +56,10 @@ bun bench:routers
 ```
 summary
   LeMMIH
-   1.32x faster than Hono RegExpRouter
-   1.32x faster than Memoirist
-   5.51x faster than Hono PatternRouter
-   13.93x faster than Hono TrieRouter
+   1.07x faster than Hono RegExpRouter
+   1.37x faster than Memoirist
+   3.89x faster than Hono PatternRouter
+   10.4x faster than Hono TrieRouter
 ```
 
 We're now the fastest router!
@@ -72,11 +72,12 @@ bun bench:frameworks
 
 |  Framework       | Runtime | Average | Ping       | Query      | Body       |
 | ---------------- | ------- | ------- | ---------- | ---------- | ---------- |
-| elysia | bun | 81,925.21 | 98,416.89 | 75,861.53 | 71,497.21 |
-| lemmih | bun | 75,771.083 | 79,894.87 | 74,951.42 | 72,466.96 |
-| hono | bun | 63,737.29 | 66,442.04 | 67,496 | 57,273.83 |
+| elysia | bun | 142,691.557 | 308,885.15 | 67,891.31 | 51,298.21 |
+| lemmih-bun | bun | 72,257.477 | 81,757.63 | 72,651.35 | 62,363.45 |
+| lemmih | bun | 50,596.787 | 69,206.43 | 46,928.6 | 35,655.33 |
+| hono | bun | 46,156.69 | 60,575.09 | 44,380.09 | 33,514.89 |
 
-We're close to Elysia.
+We're still a distance from Elysia.
 
 ### Framework cold start
 
@@ -87,12 +88,14 @@ bun bench:frameworks-init
 ```
 summary
   lemmih/bun
-   3.87x faster than lemmih
-   4.51x faster than hono/quick
-   4.79x faster than hono
-   14.61x faster than hono/tiny
-   66.48x faster than elysia
+   2.4x faster than lemmih
+   4.56x faster than hono/quick
+   6.43x faster than hono
+   10.43x faster than hono/tiny
+   29.41x faster than elysia
 ```
+
+Due to LeMMIH's minimal context design, it achieves very fast cold starts.
 
 ## License
 
