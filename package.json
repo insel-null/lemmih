@@ -2,6 +2,7 @@
   "name": "lemmih",
   "type": "module",
   "version": "0.0.2",
+  "packageManager": "pnpm@10.20.0",
   "repository": "github:insel-null/lemmih",
   "bugs": "https://github.com/insel-null/lemmih/issues",
   "keywords": [
