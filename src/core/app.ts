@@ -3,7 +3,7 @@ import type { TypedParams } from './types/typed-params'
 
 import { status } from '../res'
 import { MethodRouter } from './method-router'
-import { Router } from './router'
+import { PathRouter } from './path-router'
 
 export class App {
   fallback?: StrictHandler
@@ -11,7 +11,7 @@ export class App {
   routesMap: Map<string, Handler> = new Map()
 
   get fetch(): StrictHandler {
-    const router = new Router<Handler>()
+    const router = new PathRouter<Handler>()
     this.routesMap.forEach((handler, path) => router.insert(path, handler))
 
     return async (req) => {

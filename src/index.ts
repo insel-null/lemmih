@@ -1,6 +1,6 @@
 export { App } from './core/app'
 export type { Node } from './core/node'
-export { Router } from './core/router'
+export { Router } from './core/path-router'
 export type * from './core/types'
 export type * from './core/types/typed-params'
 export * as res from './res'

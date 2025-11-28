@@ -1,7 +1,21 @@
-import { newNode } from './node'
+export interface PathRouterNode<T> {
+  children: Map<string, PathRouterNode<T>>
+  param?: PathRouterNode<T>
+  paramName?: string
+  value?: T
+  wildcard?: PathRouterNode<T>
+}
 
-export class Router<T> {
-  root = newNode<T>()
+export const createNode = <T>(value?: T): PathRouterNode<T> => ({
+  children: new Map(),
+  param: undefined,
+  paramName: undefined,
+  value,
+  wildcard: undefined,
+})
+
+export class PathRouter<T> {
+  root = createNode<T>()
 
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
     let currentNode = this.root
@@ -57,13 +71,13 @@ export class Router<T> {
       }
       if (segment[0] === ':') {
         if (currentNode.param === undefined) {
-          currentNode.param = newNode()
+          currentNode.param = createNode()
           currentNode.param.paramName = segment.slice(1)
         }
         currentNode = currentNode.param
       }
       else if (segment === '*') {
-        currentNode.wildcard ||= newNode()
+        currentNode.wildcard ||= createNode()
         currentNode = currentNode.wildcard
         break
       }
@@ -72,7 +86,7 @@ export class Router<T> {
           currentNode = currentNode.children.get(segment)!
         }
         else {
-          const node = newNode<T>()
+          const node = createNode<T>()
           currentNode.children.set(segment, node)
           currentNode = node
         }
