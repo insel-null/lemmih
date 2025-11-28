@@ -33,11 +33,11 @@ export class PathRouter<T> {
         currentNode = child
       }
       else if (currentNode.param) {
-        currentNode = currentNode.param
         if (currentNode.param?.paramName != null) {
           params ||= {}
           params[currentNode.param.paramName] = segment
         }
+        currentNode = currentNode.param
       }
       else if (currentNode.wildcard) {
         currentNode = currentNode.wildcard
