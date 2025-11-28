@@ -2,6 +2,7 @@ import type { Handler, Layer, StrictHandler } from './types'
 import type { TypedParams } from './types/typed-params'
 
 import { status } from '../res'
+import { MethodRouter } from './method-router'
 import { Router } from './router'
 
 export class App {
@@ -66,9 +67,16 @@ export class App {
     return this
   }
 
-  public route<T extends string>(path: T, handler: Handler<TypedParams<T>>): this {
-    // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
-    this.routesMap.set(path, handler as unknown as Handler)
+  public route<T extends string>(path: T, handler: Handler<TypedParams<T>> | MethodRouter<TypedParams<T>>): this {
+    this.routesMap.set(
+      path,
+      handler instanceof MethodRouter
+        // TODO: remove any
+        // eslint-disable-next-line ts/no-unsafe-argument
+        ? async (req, params) => handler.handle(req, params as any)
+        // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
+        : handler as unknown as Handler,
+    )
 
     return this
   }

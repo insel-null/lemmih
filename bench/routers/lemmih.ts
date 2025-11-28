@@ -11,7 +11,7 @@ const router = new Router()
 // eslint-disable-next-line @masknet/no-top-level
 for (const route of routes) {
   // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
-  router.insert(route.path, routing[route.method.toLowerCase() as 'get' | 'post'](handler as unknown as Handler))
+  router.insert(route.path, routing.on(route.method, handler as unknown as Handler))
 }
 
 export const lemmihRouter: RouterInterface = {

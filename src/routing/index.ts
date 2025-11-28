@@ -1,28 +1,15 @@
+import type { Method } from '../core/method-router'
 import type { Handler } from '../core/types'
 
-import { status } from '../res/status'
+import { MethodRouter } from '../core/method-router'
 
-const routing = <T = undefined>(method: string) =>
-  (handler: Handler<T>): Handler<T> =>
-    async (req, params) =>
-      req.method.toUpperCase() === method
-        ? handler(req, params)
-        : status(405)
-
-export const connect = routing('CONNECT')
-
-export const del = routing('DELETE')
-
-export const get = <T = undefined>(handler: Handler<T>) => routing<T>('GET')(handler)
-
-export const head = routing('HEAD')
-
-export const options = routing('OPTIONS')
-
-export const patch = routing('PATCH')
-
-export const post = <T = undefined>(handler: Handler<T>) => routing<T>('POST')(handler)
-
-export const put = routing('PUT')
-
-export const trace = routing('TRACE')
+export const any = <T>(handler: Handler<T>) => new MethodRouter<T>().any(handler)
+export const connect = <T>(handler: Handler<T>) => new MethodRouter<T>().connect(handler)
+export const del = <T>(handler: Handler<T>) => new MethodRouter<T>().delete(handler)
+export const get = <T>(handler: Handler<T>) => new MethodRouter<T>().get(handler)
+export const head = <T>(handler: Handler<T>) => new MethodRouter<T>().head(handler)
+export const on = <T>(method: Method, handler: Handler<T>) => new MethodRouter<T>().on(method, handler)
+export const patch = <T>(handler: Handler<T>) => new MethodRouter<T>().patch(handler)
+export const post = <T>(handler: Handler<T>) => new MethodRouter<T>().post(handler)
+export const put = <T>(handler: Handler<T>) => new MethodRouter<T>().put(handler)
+export const trace = <T>(handler: Handler<T>) => new MethodRouter<T>().trace(handler)
