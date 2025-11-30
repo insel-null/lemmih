@@ -6,7 +6,7 @@ export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH'
 
 export class MethodRouter<T> {
   private anyHandler: Handler<T>
-  private handlers: Record<string, Handler<T>>
+  private handlers: Record<Method, Handler<T>>
 
   constructor() {
     this.handlers = Object.create(null) as Record<string, Handler<T>>
@@ -28,15 +28,14 @@ export class MethodRouter<T> {
   }
 
   get(handler: Handler<T>): MethodRouter<T> {
-    return this.on('GET', handler)
+    this.handlers.GET = handler
+    this.handlers.HEAD = this.headHandler()
+
+    return this
   }
 
   async handle(req: Request, params: Parameters<Handler<T>>[1]): Promise<Response> {
-    return (this.handlers[req.method] ?? this.anyHandler)(req, params)
-  }
-
-  head(handler: Handler<T>): MethodRouter<T> {
-    return this.on('HEAD', handler)
+    return (this.handlers[req.method as Method] ?? this.anyHandler)(req, params)
   }
 
   on(method: Method, handler: Handler<T>): MethodRouter<T> {
@@ -63,5 +62,17 @@ export class MethodRouter<T> {
 
   trace(handler: Handler<T>): MethodRouter<T> {
     return this.on('TRACE', handler)
+  }
+
+  private headHandler(): Handler<T> {
+    return async (req, params) => {
+      const res = await this.handlers.GET(req, params)
+
+      return new Response(null, {
+        headers: res.headers,
+        status: res.status,
+        statusText: res.statusText,
+      })
+    }
   }
 }
