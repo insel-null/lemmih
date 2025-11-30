@@ -12,7 +12,9 @@ const app = new App()
 
 // Web Standards (Deno, Bun, Vercel, Cloudflare, etc...)
 // For Node.js, you can use https://srvx.h3.dev
-export default app.fetch // (req: Request) => Promise<Response>
+export default {
+  fetch: app.fetch // (req: Request) => Promise<Response>
+}
 ```
 
 ```ts
