@@ -11,8 +11,7 @@ export class App {
   routesMap: Map<string, Handler> = new Map()
 
   get fetch(): StrictHandler {
-    const router = new PathRouter<Handler>()
-    this.routesMap.forEach((handler, path) => router.insert(path, handler))
+    const router = this.buildRouter()
 
     return async (req) => {
       const result = router.find(new URL(req.url).pathname)
@@ -24,6 +23,8 @@ export class App {
       )
     }
   }
+
+  private router: PathRouter<Handler> | undefined
 
   constructor(fallback?: StrictHandler) {
     // eslint-disable-next-line @masknet/prefer-early-return
@@ -64,6 +65,7 @@ export class App {
         throw new Error('lemmih: Cannot merge two `App`s that both have a fallback')
     }
 
+    this.router = undefined
     return this
   }
 
@@ -78,6 +80,18 @@ export class App {
         : handler as unknown as Handler,
     )
 
+    this.router = undefined
     return this
+  }
+
+  private buildRouter(): PathRouter<Handler> {
+    if (this.router)
+      return this.router
+
+    const router = new PathRouter<Handler>()
+    this.routesMap.forEach((handler, path) => router.insert(path, handler))
+    this.router = router
+
+    return this.router
   }
 }
