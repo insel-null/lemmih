@@ -8,7 +8,6 @@ const routing = {
   connect: <T>(handler: Handler<T>) => new MethodRouter<T>().connect(handler),
   delete: <T>(handler: Handler<T>) => new MethodRouter<T>().delete(handler),
   get: <T>(handler: Handler<T>) => new MethodRouter<T>().get(handler),
-  head: <T>(handler: Handler<T>) => new MethodRouter<T>().head(handler),
   on: <T>(method: Method, handler: Handler<T>) => new MethodRouter<T>().on(method, handler),
   patch: <T>(handler: Handler<T>) => new MethodRouter<T>().patch(handler),
   post: <T>(handler: Handler<T>) => new MethodRouter<T>().post(handler),
