@@ -1,3 +1,5 @@
+import { parse } from 'fast-querystring'
+
 import { App, res, routing } from '../../src'
 
 const app = new App()
@@ -6,7 +8,7 @@ const app = new App()
 app
   .route('/', routing.get(() => res.text('Hi')))
   .route('/json', routing.post(async req => req.json().then(res.json)))
-  .route('/id/:id', routing.get((req, { id }) => new Response(`${id} ${new URL(req.url).searchParams.get('name')}`, {
+  .route('/id/:id', routing.get((req, { id }) => new Response(`${id} ${parse(req.url.split('?')[1]!).name}`, {
     headers: {
       'x-powered-by': 'benchmark',
     },

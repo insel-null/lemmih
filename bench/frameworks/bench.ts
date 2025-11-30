@@ -212,12 +212,13 @@ const main = async () => {
   //   .filter(x => x)
   //   .sort()
   const frameworks = [
+    'bun/lemmih-bun',
+    'bun/lemmih',
+
     'bun/elysia',
     'bun/hono',
     'bun/itty-router-auto',
     'bun/itty-router',
-    'bun/lemmih-bun',
-    'bun/lemmih',
   ]
 
   // Overwrite test here
