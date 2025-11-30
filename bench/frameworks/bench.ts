@@ -214,6 +214,8 @@ const main = async () => {
   const frameworks = [
     'bun/elysia',
     'bun/hono',
+    'bun/itty-router-auto',
+    'bun/itty-router',
     'bun/lemmih-bun',
     'bun/lemmih',
   ]
