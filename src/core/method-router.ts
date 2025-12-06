@@ -4,7 +4,7 @@ import { status } from '../res'
 
 export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE'
 
-export class MethodRouter<T> {
+export class MethodRouter<T = undefined> {
   private handlers: Record<Method, Handler<T>> = Object.create(null) as Record<string, Handler<T>>
 
   any(handler: Handler<T>): MethodRouter<T> {
