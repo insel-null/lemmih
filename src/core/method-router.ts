@@ -5,13 +5,7 @@ import { status } from '../res'
 export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE'
 
 export class MethodRouter<T> {
-  private anyHandler: Handler<T>
-  private handlers: Record<Method, Handler<T>>
-
-  constructor() {
-    this.handlers = Object.create(null) as Record<string, Handler<T>>
-    this.anyHandler = async () => status(405)
-  }
+  private handlers: Record<Method, Handler<T>> = Object.create(null) as Record<string, Handler<T>>
 
   any(handler: Handler<T>): MethodRouter<T> {
     this.anyHandler = handler
@@ -63,6 +57,8 @@ export class MethodRouter<T> {
   trace(handler: Handler<T>): MethodRouter<T> {
     return this.on('TRACE', handler)
   }
+
+  private anyHandler: Handler<T> = async () => status(405)
 
   private headHandler(): Handler<T> {
     return async (req, params) => {
