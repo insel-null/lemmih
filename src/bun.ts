@@ -1,14 +1,13 @@
 import type { BunRequest } from 'bun'
 
-import type { MethodRouter } from './core/method-router'
 import type { Handler, StrictHandler } from './core/types'
-import type { TypedParams } from './core/types/typed-params'
 
-import { App } from './core/app'
+import { BaseApp } from './core/base-app'
+import { MethodRouter } from './core/method-router'
 import { status } from './res'
 
-class BunApp extends App {
-  override get fetch(): StrictHandler {
+class BunApp extends BaseApp {
+  get fetch(): StrictHandler {
     return this.fallback ?? (async () => status(404))
   }
 
@@ -21,18 +20,20 @@ class BunApp extends App {
 
   private routesObj: Bun.Serve.Routes<undefined, string> | undefined
 
-  constructor(fallback?: StrictHandler) {
-    super(fallback)
-  }
-
-  override merge(app: App): this {
-    super.merge(app)
+  override merge(app: BunApp): this {
     this.routesObj = undefined
-    return this
+    return super.merge(app)
   }
 
-  override route<T extends string>(path: T, handler: Handler<TypedParams<T>> | MethodRouter<TypedParams<T>>): this {
-    super.route(path, handler)
+  public route<T extends string>(path: T, handler: Handler<Bun.Serve.ExtractRouteParams<T>> | MethodRouter<Bun.Serve.ExtractRouteParams<T>>): this {
+    this.routesMap.set(
+      path,
+      handler instanceof MethodRouter
+        ? (async (req, params) => handler.handle(req, params)) satisfies Handler<Bun.Serve.ExtractRouteParams<T>> as Handler
+        // eslint-disable-next-line @masknet/type-no-force-cast-via-top-type
+        : handler as unknown as Handler,
+    )
+
     this.routesObj = undefined
     return this
   }
