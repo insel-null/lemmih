@@ -5,64 +5,65 @@ import { status } from '../res'
 export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE'
 
 export class MethodRouter<T = undefined> {
-  private handlers: Record<Method, Handler<T>> = Object.create(null) as Record<string, Handler<T>>
+  private anyHandler: Handler<T>[] = [async () => status(405)]
 
-  any(handler: Handler<T>): MethodRouter<T> {
-    this.anyHandler = handler
+  private handlers: Record<Method, Handler<T>[]> = Object.create(null) as Record<string, Handler<T>[]>
 
+  any(handlers: Handler<T>[]): MethodRouter<T> {
+    this.anyHandler = handlers
     return this
   }
 
-  connect(handler: Handler<T>): MethodRouter<T> {
-    return this.on('CONNECT', handler)
+  connect(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('CONNECT', handlers)
   }
 
-  delete(handler: Handler<T>): MethodRouter<T> {
-    return this.on('DELETE', handler)
+  delete(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('DELETE', handlers)
   }
 
-  get(handler: Handler<T>): MethodRouter<T> {
-    this.handlers.GET = handler
-    this.handlers.HEAD = this.headHandler()
+  get(handlers: Handler<T>[]): MethodRouter<T> {
+    this.handlers.GET = handlers
+    this.handlers.HEAD = [this.headHandler()]
 
     return this
   }
 
   async handle(req: Request, params: Parameters<Handler<T>>[1]): Promise<Response> {
-    return (this.handlers[req.method as Method] ?? this.anyHandler)(req, params)
+    const handlers = this.handlers[req.method as Method] ?? this.anyHandler
+    return this.runHandlers(handlers, req, params)
   }
 
-  on(method: Method, handler: Handler<T>): MethodRouter<T> {
-    this.handlers[method] = handler
+  on(method: Method, handlers: Handler<T>[]): MethodRouter<T> {
+    this.handlers[method] = handlers
 
     return this
   }
 
-  options(handler: Handler<T>): MethodRouter<T> {
-    return this.on('OPTIONS', handler)
+  options(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('OPTIONS', handlers)
   }
 
-  patch(handler: Handler<T>): MethodRouter<T> {
-    return this.on('PATCH', handler)
+  patch(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('PATCH', handlers)
   }
 
-  post(handler: Handler<T>): MethodRouter<T> {
-    return this.on('POST', handler)
+  post(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('POST', handlers)
   }
 
-  put(handler: Handler<T>): MethodRouter<T> {
-    return this.on('PUT', handler)
+  put(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('PUT', handlers)
   }
 
-  trace(handler: Handler<T>): MethodRouter<T> {
-    return this.on('TRACE', handler)
+  trace(handlers: Handler<T>[]): MethodRouter<T> {
+    return this.on('TRACE', handlers)
   }
-
-  private anyHandler: Handler<T> = async () => status(405)
 
   private headHandler(): Handler<T> {
     return async (req, params) => {
-      const res = await this.handlers.GET(req, params)
+      const handlers = this.handlers.GET ?? this.anyHandler
+      const res = await this.runHandlers(handlers, req, params)
 
       return new Response(null, {
         headers: res.headers,
@@ -70,5 +71,16 @@ export class MethodRouter<T = undefined> {
         statusText: res.statusText,
       })
     }
+  }
+
+  private async runHandlers(handlers: Handler<T>[], req: Request, params: Parameters<Handler<T>>[1]): Promise<Response> {
+    let res: Response | undefined
+    for (let i = 0, len = handlers.length; i < len; i++) {
+      res = await handlers[i]!(req, params)
+      if (res != null)
+        break
+    }
+    // TODO: throw a type error if res is undefined here
+    return res!
   }
 }
