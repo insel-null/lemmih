@@ -4,15 +4,15 @@ import type { Handler } from '../core/types'
 import { MethodRouter } from '../core/method-router'
 
 const routing = {
-  any: <T>(handler: Handler<T>) => new MethodRouter<T>().any(handler),
-  connect: <T>(handler: Handler<T>) => new MethodRouter<T>().connect(handler),
-  delete: <T>(handler: Handler<T>) => new MethodRouter<T>().delete(handler),
-  get: <T>(handler: Handler<T>) => new MethodRouter<T>().get(handler),
-  on: <T>(method: Method, handler: Handler<T>) => new MethodRouter<T>().on(method, handler),
-  patch: <T>(handler: Handler<T>) => new MethodRouter<T>().patch(handler),
-  post: <T>(handler: Handler<T>) => new MethodRouter<T>().post(handler),
-  put: <T>(handler: Handler<T>) => new MethodRouter<T>().put(handler),
-  trace: <T>(handler: Handler<T>) => new MethodRouter<T>().trace(handler),
+  any: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().any(handlers),
+  connect: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().connect(handlers),
+  delete: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().delete(handlers),
+  get: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().get(handlers),
+  on: <T>(method: Method, ...handlers: Handler<T>[]) => new MethodRouter<T>().on(method, handlers),
+  patch: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().patch(handlers),
+  post: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().post(handlers),
+  put: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().put(handlers),
+  trace: <T>(...handlers: Handler<T>[]) => new MethodRouter<T>().trace(handlers),
 }
 
 export default routing
