@@ -36,6 +36,21 @@ describe('PathRouter', () => {
     })
   })
 
+  test('falls back to a root wildcard after a static branch ends early', () => {
+    const router = new PathRouter<string>()
+    router.insert('/v1/example', 'static')
+    router.insert('/*', 'fallback')
+
+    expect(router.find('/v1')).toEqual({
+      params: {},
+      value: 'fallback',
+    })
+    expect(router.find('/v1/example')).toEqual({
+      params: {},
+      value: 'static',
+    })
+  })
+
   test('falls back to the trie for non-canonical static paths', () => {
     const router = new PathRouter<string>()
     router.insert('/foo', 'static')
