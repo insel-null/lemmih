@@ -6,6 +6,14 @@ export interface PathRouterNode<T> {
   wildcard?: PathRouterNode<T>
 }
 
+interface PathRouterMatchState<T> {
+  node: PathRouterNode<T>
+  paramName?: string
+  params?: Record<string, string>
+  paramValue?: string
+  segmentIndex: number
+}
+
 export const createNode = <T>(value?: T): PathRouterNode<T> => ({
   children: new Map(),
   param: undefined,
@@ -17,45 +25,93 @@ export const createNode = <T>(value?: T): PathRouterNode<T> => ({
 export class PathRouter<T> {
   root = createNode<T>()
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity -- the explicit branches preserve route priority while backtracking
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
+    const segments = path.split('/')
     let currentNode = this.root
     let params: Record<string, string> | undefined
+    let segmentIndex = 0
+    let alternatives: PathRouterMatchState<T>[] | undefined
 
-    const segments = path.split('/')
-    for (let i = 0, len = segments.length; i < len; i++) {
-      const segment = segments[i]
-      // eslint-disable-next-line ts/strict-boolean-expressions
-      if (!segment)
-        continue
+    while (segmentIndex < segments.length && segments[segmentIndex] === '')
+      segmentIndex++
 
-      const child = currentNode.children.get(segment)
-      if (child) {
-        currentNode = child
-      }
-      else if (currentNode.param) {
-        if (currentNode.param?.paramName != null) {
-          params ||= {}
-          params[currentNode.param.paramName] = segment
-        }
-        currentNode = currentNode.param
-      }
-      else if (currentNode.wildcard) {
-        currentNode = currentNode.wildcard
-        // params ||= {}
-        // params['*'] = segments.slice(i).filter(Boolean).join('/')
-        break
+    while (true) {
+      if (segmentIndex >= segments.length) {
+        if (currentNode.value != null)
+          return { params: params ?? {}, value: currentNode.value }
       }
       else {
-        return
+        const segment = segments[segmentIndex]!
+        let nextSegmentIndex = segmentIndex + 1
+        while (nextSegmentIndex < segments.length && segments[nextSegmentIndex] === '')
+          nextSegmentIndex++
+
+        const child = currentNode.children.get(segment)
+        const param = currentNode.param
+        const wildcard = currentNode.wildcard
+
+        if (child) {
+          // Keep lower-priority branches so a static branch that fails later
+          // can fall back to a parameter or wildcard branch.
+          if (wildcard) {
+            alternatives ||= []
+            alternatives.push({
+              node: wildcard,
+              params,
+              segmentIndex: segments.length,
+            })
+          }
+          if (param) {
+            alternatives ||= []
+            alternatives.push({
+              node: param,
+              paramName: param.paramName,
+              params,
+              paramValue: segment,
+              segmentIndex: nextSegmentIndex,
+            })
+          }
+
+          currentNode = child
+          segmentIndex = nextSegmentIndex
+          continue
+        }
+
+        if (param) {
+          if (wildcard) {
+            alternatives ||= []
+            alternatives.push({
+              node: wildcard,
+              params,
+              segmentIndex: segments.length,
+            })
+          }
+
+          currentNode = param
+          params = param.paramName != null
+            ? { ...(params ?? {}), [param.paramName]: segment }
+            : params
+          segmentIndex = nextSegmentIndex
+          continue
+        }
+
+        if (wildcard) {
+          currentNode = wildcard
+          segmentIndex = segments.length
+          continue
+        }
       }
-    }
 
-    if (currentNode.value != null) {
-      // if (wildcardPath)
-      //   params['*'] = wildcardPath
+      const alternative = alternatives?.pop()
+      if (!alternative)
+        return
 
-      // return { params, value: currentNode.value }
-      return { params: params ?? {}, value: currentNode.value }
+      currentNode = alternative.node
+      params = alternative.paramName != null
+        ? { ...(alternative.params ?? {}), [alternative.paramName]: alternative.paramValue! }
+        : alternative.params
+      segmentIndex = alternative.segmentIndex
     }
   }
 
