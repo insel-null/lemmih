@@ -1,3 +1,5 @@
+import NullProtoObj from 'null-prototype-object'
+
 export interface PathRouterNode<T> {
   children: Map<string, PathRouterNode<T>>
   param?: PathRouterNode<T>
@@ -37,7 +39,7 @@ export const createNode = <T>(value?: T): PathRouterNode<T> => ({
 
 export class PathRouter<T> {
   root = createNode<T>()
-  private staticRoutes = Object.create(null) as Record<string, T>
+  private staticRoutes = new NullProtoObj() as Record<string, T>
 
   // eslint-disable-next-line sonarjs/cognitive-complexity -- the explicit branches preserve route priority while backtracking
   find(path: string): undefined | { params: Record<string, string>, value?: T } {

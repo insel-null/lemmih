@@ -1,5 +1,7 @@
 import type { Handler } from './types'
 
+import NullProtoObj from 'null-prototype-object'
+
 import { status } from '../res'
 
 export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH' | 'POST' | 'PUT' | 'TRACE'
@@ -7,7 +9,7 @@ export type Method = 'CONNECT' | 'DELETE' | 'GET' | 'HEAD' | 'OPTIONS' | 'PATCH'
 export class MethodRouter<T = undefined> {
   private anyHandler: Handler<T>[] = [async () => status(405)]
 
-  private handlers: Record<Method, Handler<T>[]> = Object.create(null) as Record<string, Handler<T>[]>
+  private handlers: Record<Method, Handler<T>[]> = new NullProtoObj() as Record<string, Handler<T>[]>
 
   any(handlers: Handler<T>[]): MethodRouter<T> {
     this.anyHandler = handlers

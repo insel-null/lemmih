@@ -62,6 +62,7 @@
     "kill-port": "^2.0.1",
     "memoirist": "^1.2.2",
     "mitata": "^1.0.34",
+    "null-prototype-object": "^1.2.7",
     "pkgroll": "^2.27.1",
     "typescript": "~6.0.3",
     "vitest": "^4.1.11"

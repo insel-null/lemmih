@@ -54,6 +54,9 @@ importers:
       mitata:
         specifier: ^1.0.34
         version: 1.0.34
+      null-prototype-object:
+        specifier: ^1.2.7
+        version: 1.2.7
       pkgroll:
         specifier: ^2.27.1
         version: 2.27.1(typescript@6.0.3)(vite@7.3.6(@types/node@24.10.1)(jiti@2.6.1)(yaml@2.9.0))
@@ -2041,6 +2044,10 @@ packages:
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
+
+  null-prototype-object@1.2.7:
+    resolution: {integrity: sha512-pSZWCUew0zed2gxCerA4zdXRGg8ezLiWwvE8RvncezTcROXL0uz3PjSZXl5NsI04Egz0Uu46o1wyX6qr3u/ZWA==}
+    engines: {node: '>= 20'}
 
   object-deep-merge@2.0.1:
     resolution: {integrity: sha512-aKttDKcU3pyZqKcCkDhsMn70WmZFG2JGDQLP9EcLyTSIFQRCPWLAmBZRLJnrVUrhPG1jETEEbfdgbNtJf1LyMg==}
@@ -4540,6 +4547,8 @@ snapshots:
   nth-check@2.1.1:
     dependencies:
       boolbase: 1.0.0
+
+  null-prototype-object@1.2.7: {}
 
   object-deep-merge@2.0.1: {}
 
