@@ -8,6 +8,7 @@ words:
   - changelogithub
   - direnv
   - elysia
+  - esbuild
   - hono
   - insel
   - itty
