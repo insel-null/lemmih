@@ -14,6 +14,19 @@ interface PathRouterMatchState<T> {
   segmentIndex: number
 }
 
+const pushMatchState = <T>(
+  alternatives: PathRouterMatchState<T>[] | undefined,
+  node: PathRouterNode<T>,
+  segmentIndex: number,
+  params: Record<string, string> | undefined,
+  paramName?: string,
+  paramValue?: string,
+): PathRouterMatchState<T>[] => {
+  alternatives ||= []
+  alternatives.push({ node, paramName, params, paramValue, segmentIndex })
+  return alternatives
+}
+
 export const createNode = <T>(value?: T): PathRouterNode<T> => ({
   children: new Map(),
   param: undefined,
@@ -54,24 +67,10 @@ export class PathRouter<T> {
         if (child) {
           // Keep lower-priority branches so a static branch that fails later
           // can fall back to a parameter or wildcard branch.
-          if (wildcard) {
-            alternatives ||= []
-            alternatives.push({
-              node: wildcard,
-              params,
-              segmentIndex: segments.length,
-            })
-          }
-          if (param) {
-            alternatives ||= []
-            alternatives.push({
-              node: param,
-              paramName: param.paramName,
-              params,
-              paramValue: segment,
-              segmentIndex: nextSegmentIndex,
-            })
-          }
+          if (wildcard)
+            alternatives = pushMatchState(alternatives, wildcard, segments.length, params)
+          if (param)
+            alternatives = pushMatchState(alternatives, param, nextSegmentIndex, params, param.paramName, segment)
 
           currentNode = child
           segmentIndex = nextSegmentIndex
@@ -79,14 +78,8 @@ export class PathRouter<T> {
         }
 
         if (param) {
-          if (wildcard) {
-            alternatives ||= []
-            alternatives.push({
-              node: wildcard,
-              params,
-              segmentIndex: segments.length,
-            })
-          }
+          if (wildcard)
+            alternatives = pushMatchState(alternatives, wildcard, segments.length, params)
 
           currentNode = param
           params = param.paramName != null
