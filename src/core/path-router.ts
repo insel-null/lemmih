@@ -37,9 +37,14 @@ export const createNode = <T>(value?: T): PathRouterNode<T> => ({
 
 export class PathRouter<T> {
   root = createNode<T>()
+  private staticRoutes = Object.create(null) as Record<string, T>
 
   // eslint-disable-next-line sonarjs/cognitive-complexity -- the explicit branches preserve route priority while backtracking
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
+    const staticValue = this.staticRoutes[path]
+    if (staticValue != null)
+      return { params: {}, value: staticValue }
+
     const segments = path.split('/')
     let currentNode = this.root
     let params: Record<string, string> | undefined
@@ -110,6 +115,7 @@ export class PathRouter<T> {
 
   insert(path: string, value: T): void {
     let currentNode = this.root
+    let isStatic = true
     const segments = path.split('/')
 
     for (let i = 0, len = segments.length; i < len; i++) {
@@ -119,6 +125,7 @@ export class PathRouter<T> {
         continue
       }
       if (segment[0] === ':') {
+        isStatic = false
         if (currentNode.param === undefined) {
           currentNode.param = createNode()
           currentNode.param.paramName = segment.slice(1)
@@ -126,6 +133,7 @@ export class PathRouter<T> {
         currentNode = currentNode.param
       }
       else if (segment === '*') {
+        isStatic = false
         currentNode.wildcard ||= createNode()
         currentNode = currentNode.wildcard
         break
@@ -142,5 +150,7 @@ export class PathRouter<T> {
       }
     }
     currentNode.value = value
+    if (isStatic)
+      this.staticRoutes[path] = value
   }
 }

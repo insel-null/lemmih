@@ -35,4 +35,14 @@ describe('PathRouter', () => {
       value: 'static',
     })
   })
+
+  test('falls back to the trie for non-canonical static paths', () => {
+    const router = new PathRouter<string>()
+    router.insert('/foo', 'static')
+
+    expect(router.find('/foo/')).toEqual({
+      params: {},
+      value: 'static',
+    })
+  })
 })
