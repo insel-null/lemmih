@@ -30,7 +30,7 @@ const runtimeCommand = {
 
 const catchNumber = /Reqs\/sec\s+(\d+[.|,]\d+)/
 const format = (value: number | string) =>
-  Intl.NumberFormat('en-US').format(+value)
+  new Intl.NumberFormat('en-US').format(+value)
 // eslint-disable-next-line @masknet/prefer-timer-id
 const sleep = async (s = 1) => new Promise(resolve => setTimeout(resolve, s * 1000))
 
@@ -65,12 +65,8 @@ const retryFetch = async (
 
           return reject(e)
         }
-        // eslint-disable-next-line @masknet/prefer-timer-id
-        setTimeout(
-          // eslint-disable-next-line ts/no-misused-promises
-          async () => retryFetch(url, options, time + 1, resolve, reject),
-          200,
-        )
+        // eslint-disable-next-line @masknet/prefer-timer-id, ts/no-misused-promises
+        setTimeout(retryFetch, 200, url, options, time + 1, resolve, reject)
       })
   })
 }
@@ -267,7 +263,7 @@ const main = async () => {
 
   // process.exit()
 
-  result.write(
+  await result.write(
     `
 |  Framework       | Runtime | Average | Ping       | Query      | Body       |
 | ---------------- | ------- | ------- | ---------- | ---------- | ---------- |
@@ -288,7 +284,7 @@ const main = async () => {
     const frameworkResultFile = Bun.file(`results/${name}.txt`)
     const frameworkResult = frameworkResultFile.writer()
 
-    result.write(`| ${name} | ${runtime} `)
+    await result.write(`| ${name} | ${runtime} `)
 
     // Wait .3 second for server to bootup
     await sleep(0.4)
@@ -297,7 +293,7 @@ const main = async () => {
     const total = []
 
     for (const command of commands) {
-      frameworkResult.write(`${command}\n`)
+      await frameworkResult.write(`${command}\n`)
 
       console.log(command)
 
@@ -317,7 +313,7 @@ const main = async () => {
       total.push(toNumber(results[1]))
 
       // eslint-disable-next-line ts/restrict-template-expressions
-      frameworkResult.write(`${results}\n`)
+      await frameworkResult.write(`${results}\n`)
     }
 
     content
@@ -327,7 +323,7 @@ const main = async () => {
         content
       }|\n`
 
-    result.write(content)
+    await result.write(content)
     await result.flush()
 
     await kill()
