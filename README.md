@@ -57,14 +57,12 @@ bun bench:routers
 
 ```
 summary
-  LeMMIH
-   1.07x faster than Hono RegExpRouter
-   1.37x faster than Memoirist
-   3.89x faster than Hono PatternRouter
-   10.4x faster than Hono TrieRouter
+  Hono RegExpRouter
+   1.01x faster than LeMMIH
+   1.35x faster than Memoirist
+   5.1x faster than Hono TrieRouter
+   6.83x faster than Hono PatternRouter
 ```
-
-We're now the fastest router!
 
 ### [Framework](./results/result.md)
 

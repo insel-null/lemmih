@@ -1,9 +1,32 @@
+import NullProtoObj from 'null-prototype-object'
+
 export interface PathRouterNode<T> {
   children: Map<string, PathRouterNode<T>>
   param?: PathRouterNode<T>
   paramName?: string
   value?: T
   wildcard?: PathRouterNode<T>
+}
+
+interface PathRouterMatchState<T> {
+  node: PathRouterNode<T>
+  paramName?: string
+  params?: Record<string, string>
+  paramValue?: string
+  segmentIndex: number
+}
+
+const pushMatchState = <T>(
+  alternatives: PathRouterMatchState<T>[] | undefined,
+  node: PathRouterNode<T>,
+  segmentIndex: number,
+  params: Record<string, string> | undefined,
+  paramName?: string,
+  paramValue?: string,
+): PathRouterMatchState<T>[] => {
+  alternatives ||= []
+  alternatives.push({ node, paramName, params, paramValue, segmentIndex })
+  return alternatives
 }
 
 export const createNode = <T>(value?: T): PathRouterNode<T> => ({
@@ -16,51 +39,85 @@ export const createNode = <T>(value?: T): PathRouterNode<T> => ({
 
 export class PathRouter<T> {
   root = createNode<T>()
+  private staticRoutes = new NullProtoObj() as Record<string, T>
 
+  // eslint-disable-next-line sonarjs/cognitive-complexity -- the explicit branches preserve route priority while backtracking
   find(path: string): undefined | { params: Record<string, string>, value?: T } {
-    let currentNode = this.root
-    let params: Record<string, string> | undefined
+    const staticValue = this.staticRoutes[path]
+    if (staticValue != null)
+      return { params: {}, value: staticValue }
 
     const segments = path.split('/')
-    for (let i = 0, len = segments.length; i < len; i++) {
-      const segment = segments[i]
-      // eslint-disable-next-line ts/strict-boolean-expressions
-      if (!segment)
-        continue
+    let currentNode = this.root
+    let params: Record<string, string> | undefined
+    let segmentIndex = 0
+    let alternatives: PathRouterMatchState<T>[] | undefined
 
-      const child = currentNode.children.get(segment)
-      if (child) {
-        currentNode = child
-      }
-      else if (currentNode.param) {
-        if (currentNode.param?.paramName != null) {
-          params ||= {}
-          params[currentNode.param.paramName] = segment
-        }
-        currentNode = currentNode.param
-      }
-      else if (currentNode.wildcard) {
-        currentNode = currentNode.wildcard
-        // params ||= {}
-        // params['*'] = segments.slice(i).filter(Boolean).join('/')
-        break
+    while (segmentIndex < segments.length && segments[segmentIndex] === '')
+      segmentIndex++
+
+    while (true) {
+      if (segmentIndex >= segments.length) {
+        if (currentNode.value != null)
+          return { params: params ?? {}, value: currentNode.value }
       }
       else {
-        return
+        const segment = segments[segmentIndex]!
+        let nextSegmentIndex = segmentIndex + 1
+        while (nextSegmentIndex < segments.length && segments[nextSegmentIndex] === '')
+          nextSegmentIndex++
+
+        const child = currentNode.children.get(segment)
+        const param = currentNode.param
+        const wildcard = currentNode.wildcard
+
+        if (child) {
+          // Keep lower-priority branches so a static branch that fails later
+          // can fall back to a parameter or wildcard branch.
+          if (wildcard)
+            alternatives = pushMatchState(alternatives, wildcard, segments.length, params)
+          if (param)
+            alternatives = pushMatchState(alternatives, param, nextSegmentIndex, params, param.paramName, segment)
+
+          currentNode = child
+          segmentIndex = nextSegmentIndex
+          continue
+        }
+
+        if (param) {
+          if (wildcard)
+            alternatives = pushMatchState(alternatives, wildcard, segments.length, params)
+
+          currentNode = param
+          params = param.paramName != null
+            ? { ...(params ?? {}), [param.paramName]: segment }
+            : params
+          segmentIndex = nextSegmentIndex
+          continue
+        }
+
+        if (wildcard) {
+          currentNode = wildcard
+          segmentIndex = segments.length
+          continue
+        }
       }
-    }
 
-    if (currentNode.value != null) {
-      // if (wildcardPath)
-      //   params['*'] = wildcardPath
+      const alternative = alternatives?.pop()
+      if (!alternative)
+        return
 
-      // return { params, value: currentNode.value }
-      return { params: params ?? {}, value: currentNode.value }
+      currentNode = alternative.node
+      params = alternative.paramName != null
+        ? { ...(alternative.params ?? {}), [alternative.paramName]: alternative.paramValue! }
+        : alternative.params
+      segmentIndex = alternative.segmentIndex
     }
   }
 
   insert(path: string, value: T): void {
     let currentNode = this.root
+    let isStatic = true
     const segments = path.split('/')
 
     for (let i = 0, len = segments.length; i < len; i++) {
@@ -70,6 +127,7 @@ export class PathRouter<T> {
         continue
       }
       if (segment[0] === ':') {
+        isStatic = false
         if (currentNode.param === undefined) {
           currentNode.param = createNode()
           currentNode.param.paramName = segment.slice(1)
@@ -77,6 +135,7 @@ export class PathRouter<T> {
         currentNode = currentNode.param
       }
       else if (segment === '*') {
+        isStatic = false
         currentNode.wildcard ||= createNode()
         currentNode = currentNode.wildcard
         break
@@ -93,5 +152,7 @@ export class PathRouter<T> {
       }
     }
     currentNode.value = value
+    if (isStatic)
+      this.staticRoutes[path] = value
   }
 }
