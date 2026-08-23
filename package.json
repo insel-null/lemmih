@@ -41,7 +41,8 @@
     "build": "pkgroll --clean-dist",
     "bump": "bumpp --no-push",
     "dev": "bun run ./test/fixtures/example.ts",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run"
   },
   "dependencies": {
     "cors-edge": "^1.0.6"
@@ -62,6 +63,7 @@
     "memoirist": "^1.2.2",
     "mitata": "^1.0.34",
     "pkgroll": "^2.27.1",
-    "typescript": "~6.0.3"
+    "typescript": "~6.0.3",
+    "vitest": "^4.1.11"
   }
 }

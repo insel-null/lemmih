@@ -19,5 +19,6 @@ words:
   - nixpkgs
   - pkgs
   - sonarjs
+  - vitest
 ignoreWords: []
 import: []

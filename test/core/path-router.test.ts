@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'bun:test'
+import { describe, expect, it } from 'vitest'
 
 import { PathRouter } from '../../src/core/path-router.ts'
 
-describe('PathRouter', () => {
-  test('falls back from a static branch to a parameter branch', () => {
+describe('path-router', () => {
+  it('falls back from a static branch to a parameter branch', () => {
     const router = new PathRouter<string>()
     router.insert('/foo/bar', 'static')
     router.insert('/foo/:id/edit', 'parameter')
@@ -14,7 +14,7 @@ describe('PathRouter', () => {
     })
   })
 
-  test('falls back from a parameter branch to a wildcard branch', () => {
+  it('falls back from a parameter branch to a wildcard branch', () => {
     const router = new PathRouter<string>()
     router.insert('/foo/:id', 'parameter')
     router.insert('/foo/*', 'wildcard')
@@ -25,7 +25,7 @@ describe('PathRouter', () => {
     })
   })
 
-  test('keeps static routes ahead of parameter routes', () => {
+  it('keeps static routes ahead of parameter routes', () => {
     const router = new PathRouter<string>()
     router.insert('/foo/:id', 'parameter')
     router.insert('/foo/bar', 'static')
@@ -36,7 +36,7 @@ describe('PathRouter', () => {
     })
   })
 
-  test('falls back to a root wildcard after a static branch ends early', () => {
+  it('falls back to a root wildcard after a static branch ends early', () => {
     const router = new PathRouter<string>()
     router.insert('/v1/example', 'static')
     router.insert('/*', 'fallback')
@@ -51,7 +51,7 @@ describe('PathRouter', () => {
     })
   })
 
-  test('falls back to the trie for non-canonical static paths', () => {
+  it('falls back to the trie for non-canonical static paths', () => {
     const router = new PathRouter<string>()
     router.insert('/foo', 'static')
 
